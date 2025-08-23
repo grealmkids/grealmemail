@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -44,16 +43,10 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
   const { message, emailType, subject } = req.body;
   const results = [];
 
-  console.log('Received request to send emails.');
-  console.log('Subject:', subject);
-  console.log('Email Type:', emailType);
-
   fs.createReadStream(req.file.path)
     .pipe(csv({ headers: ['schoolname', 'email'] }))
     .on('data', (data) => results.push(data))
     .on('end', () => {
-      console.log('CSV file processed. Found', results.length, 'records.');
-
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: process.env.SMTP_PORT,
@@ -62,10 +55,10 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
-        debug: true // Enable debug output
+        tls: {
+          rejectUnauthorized: false
+        }
       });
-
-      console.log('Nodemailer transporter created.');
 
       const promises = results.map(row => {
         const mailOptions = {
@@ -80,13 +73,11 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
           mailOptions.text = message;
         }
 
-        console.log(`Preparing to send email to: ${row.email}`);
         return transporter.sendMail(mailOptions);
       });
 
       Promise.all(promises)
         .then(() => {
-          console.log('All emails sent successfully.');
           fs.unlinkSync(req.file.path);
           res.redirect('/dashboard?status=success');
         })

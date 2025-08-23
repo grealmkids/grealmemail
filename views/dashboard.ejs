@@ -1,72 +1,85 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Email Sender</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-  <div class="container">
-    <div class="dashboard-box">
-      <div class="header">
-        <h1>Email Dashboard</h1>
-        <a href="/logout" class="logout-button">Logout</a>
-      </div>
-      <form action="/send" method="POST" enctype="multipart/form-data" onsubmit="showProgress()">
-        <div class="input-group">
-          <label for="csvfile">Upload CSV File</label>
-          <input type="file" id="csvfile" name="csvfile" accept=".csv" required>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>G-Realm - Email Sender</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="dashboard-box">
+        <div class="header">
+          <h1>Email Dashboard</h1>
+          <a href="/logout" class="logout-button">Logout</a>
         </div>
-        <div class="input-group">
-          <label for="subject">Subject</label>
-          <input type="text" id="subject" name="subject" required>
-        </div>
-        <div class="input-group">
-          <label>Email Format</label>
-          <div class="radio-group">
-            <input type="radio" id="plain" name="emailType" value="plain" checked>
-            <label for="plain">Plain Text</label>
-            <input type="radio" id="html" name="emailType" value="html">
-            <label for="html">HTML</label>
+        <form
+          action="/send"
+          method="POST"
+          enctype="multipart/form-data"
+          onsubmit="showProgress()">
+          <div class="input-group">
+            <label for="csvfile">Upload CSV File</label>
+            <input
+              type="file"
+              id="csvfile"
+              name="csvfile"
+              accept=".csv"
+              required />
           </div>
-        </div>
-        <div class="input-group">
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="10" required></textarea>
-        </div>
-        <button type="submit">Send Emails</button>
-      </form>
+          <div class="input-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" required />
+          </div>
+          <div class="input-group">
+            <label>Email Format</label>
+            <div class="radio-group">
+              <input
+                type="radio"
+                id="plain"
+                name="emailType"
+                value="plain"
+                checked />
+              <label for="plain">Plain Text</label>
+              <input type="radio" id="html" name="emailType" value="html" />
+              <label for="html">HTML</label>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="10" required></textarea>
+          </div>
+          <button type="submit">Send Emails</button>
+        </form>
+      </div>
     </div>
-  </div>
-  <script>
-    function showProgress() {
-      Swal.fire({
-        title: 'Sending Emails...',
-        text: 'Please wait.',
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        }
-      });
-    }
+    <script>
+      function showProgress() {
+        Swal.fire({
+          title: "Sending Emails...",
+          text: "Please wait.",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+      }
 
-    const status = '<%- status %>';
-    if (status === 'success') {
-      Swal.fire({
-        title: 'Success!',
-        text: 'Emails sent successfully.',
-        icon: 'success'
-      });
-    } else if (status === 'error') {
-      Swal.fire({
-        title: 'Error!',
-        text: 'An error occurred. Please check the console for details.',
-        icon: 'error'
-      });
-    }
-  </script>
-</body>
+      const status = "<%- status %>";
+      if (status === "success") {
+        Swal.fire({
+          title: "Success!",
+          text: "Emails sent successfully.",
+          icon: "success",
+        });
+      } else if (status === "error") {
+        Swal.fire({
+          title: "Error!",
+          text: "An error occurred. Please check the console for details.",
+          icon: "error",
+        });
+      }
+    </script>
+  </body>
 </html>

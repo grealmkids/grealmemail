@@ -5,54 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>G-Realm - Email Sender</title>
     <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="dashboard-box">
-        <div class="header">
-          <h1>Email Dashboard</h1>
-          <a href="/logout" class="logout-button">Logout</a>
-        </div>
-        <form
-          action="/send"
-          method="POST"
-          enctype="multipart/form-data"
-          onsubmit="showProgress()">
-          <div class="input-group">
-            <label for="csvfile">Upload CSV File</label>
-            <input
-              type="file"
-              id="csvfile"
-              name="csvfile"
-              accept=".csv"
-              required />
-          </div>
-          <div class="input-group">
-            <label for="subject">Subject</label>
-            <input type="text" id="subject" name="subject" required />
-          </div>
-          <div class="input-group">
-            <label>Email Format</label>
-            <div class="radio-group">
+    <a href="/logout" class="logout-button-icon"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    <div class="container dashboard-container">
+      <div class="header">
+        <h1>Email Dashboard</h1>
+      </div>
+      <form
+        action="/send"
+        method="POST"
+        enctype="multipart/form-data"
+        onsubmit="showProgress()">
+        <div class="dashboard-grid">
+          <div class="left-column">
+            <div class="input-group">
+              <label for="csvfile">Upload CSV File</label>
               <input
-                type="radio"
-                id="plain"
-                name="emailType"
-                value="plain"
-                checked />
-              <label for="plain">Plain Text</label>
-              <input type="radio" id="html" name="emailType" value="html" />
-              <label for="html">HTML</label>
+                type="file"
+                id="csvfile"
+                name="csvfile"
+                accept=".csv"
+                required />
+            </div>
+            <div class="input-group">
+              <label>Email Format</label>
+              <div class="radio-group">
+                <input
+                  type="radio"
+                  id="plain"
+                  name="emailType"
+                  value="plain"
+                  checked />
+                <label for="plain">Plain Text</label>
+                <input type="radio" id="html" name="emailType" value="html" />
+                <label for="html">HTML</label>
+              </div>
             </div>
           </div>
-          <div class="input-group">
-            <label for="message">Message</label>
-            <textarea id="message" name="message" rows="10" required></textarea>
+          <div class="center-column">
+            <div class="input-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" required />
+            </div>
+            <div class="input-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" rows="15" required></textarea>
+            </div>
+            <button type="submit">Send Emails</button>
           </div>
-          <button type="submit">Send Emails</button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
     <script>
       function showProgress() {

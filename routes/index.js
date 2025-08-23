@@ -62,7 +62,7 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
 
       const promises = results.map(row => {
         const mailOptions = {
-          from: process.env.EMAIL_USER,
+          from: `"G-Realm Studio" <${process.env.EMAIL_USER}>`,
           to: row.email,
           subject: subject,
         };

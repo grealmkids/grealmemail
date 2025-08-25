@@ -133,10 +133,12 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
           subject: subject,
         };
 
+        const personalizedMessage = message.replace(/\[School Name\]/g, row.schoolname);
+
         if (emailType === 'html') {
-          mailOptions.html = message;
+          mailOptions.html = personalizedMessage;
         } else {
-          mailOptions.text = message;
+          mailOptions.text = personalizedMessage;
         }
 
         return transporter.sendMail(mailOptions)

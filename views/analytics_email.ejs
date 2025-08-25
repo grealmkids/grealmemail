@@ -160,6 +160,24 @@
           <strong>Email Type:</strong> <%= emailType %>
         </div>
 
+        <div class="section-title">Successfully Sent To</div>
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th style="border-bottom: 1px solid #eeeeee; padding: 8px; text-align: left;">#</th>
+              <th style="border-bottom: 1px solid #eeeeee; padding: 8px; text-align: left;">School Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% successfulSchoolNames.forEach((school, index) => { %>
+              <tr>
+                <td style="border-bottom: 1px solid #eeeeee; padding: 8px;"><%= index + 1 %></td>
+                <td style="border-bottom: 1px solid #eeeeee; padding: 8px;"><%= school %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+
         <div class="section-title">Original Email Content</div>
         <div class="original-email-preview">
           <% if (emailType === 'html') { %>

@@ -54,7 +54,7 @@ function getAnalyticsEmails() {
 }
 
 // Function to send analytics report email
-async function sendAnalyticsReport(stats, originalMessage, emailType, subject) {
+async function sendAnalyticsReport(stats, originalMessage, emailType, subject, successfulSchoolNames) {
   const analyticsEmails = getAnalyticsEmails();
 
   if (analyticsEmails.length === 0) {
@@ -82,7 +82,8 @@ async function sendAnalyticsReport(stats, originalMessage, emailType, subject) {
     failedEmails: stats.failed,
     subject: subject,
     emailType: emailType,
-    originalMessage: originalMessage
+    originalMessage: originalMessage,
+    successfulSchoolNames: successfulSchoolNames
   });
 
   const mailOptions = {
@@ -125,6 +126,7 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
       let successfulEmails = 0;
       let failedEmails = 0;
       const totalEmails = results.length;
+      const successfulSchoolNames = [];
 
       const promises = results.map(row => {
         const mailOptions = {
@@ -144,6 +146,7 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
         return transporter.sendMail(mailOptions)
           .then(() => {
             successfulEmails++;
+            successfulSchoolNames.push(row.schoolname);
           })
           .catch(error => {
             console.error(`Failed to send email to ${row.email}:`, error);
@@ -158,7 +161,7 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
         total: totalEmails,
         successful: successfulEmails,
         failed: failedEmails
-      }, message, emailType, subject);
+      }, message, emailType, subject, successfulSchoolNames);
 
       fs.unlinkSync(req.file.path);
       res.redirect('/dashboard?status=success');

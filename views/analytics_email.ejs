@@ -4,205 +4,356 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Email Campaign Analytics Report - G-Realm Studio</title>
-    <style type="text/css">
-      body {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        line-height: 1.6;
-        color: #333333;
-        background-color: #f8f8f8;
-        margin: 0;
-        padding: 0;
-        -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-      }
-      .email-wrapper {
-        max-width: 600px;
-        margin: 20px auto;
-        background: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        overflow: hidden;
-      }
-      .header {
-        background-color: #00b33c; /* G-Realm primary blue */
-        padding: 25px 30px;
-        color: #ffffff;
-        text-align: center;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-      }
-      .header h1 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 600;
-      }
-      .header p {
-        margin: 5px 0 0;
-        font-size: 14px;
-        opacity: 0.9;
-      }
-      .content-section {
-        padding: 30px;
-      }
-      .section-title {
-        font-size: 18px;
-        font-weight: 600;
-        color: #0056b3;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #eeeeee;
-        padding-bottom: 10px;
-      }
-      .stats-grid {
-        display: table; /* For email client compatibility */
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 30px;
-      }
-      .stat-item {
-        display: table-cell;
-        width: 33.33%; /* Three columns */
-        padding: 15px;
-        text-align: center;
-        vertical-align: top;
-        border-right: 1px solid #f0f0f0;
-      }
-      .stat-item:last-child {
-        border-right: none;
-      }
-      .stat-value {
-        font-size: 28px;
-        font-weight: 700;
-        color: #007bff; /* Primary blue for general stats */
-        margin-bottom: 5px;
-      }
-      .stat-label {
-        font-size: 13px;
-        color: #666666;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-      .stat-value.success {
-        color: #28a745;
-      } /* Green for success */
-      .stat-value.failed {
-        color: #dc3545;
-      } /* Red for failed */
-
-      .detail-item {
-        margin-bottom: 10px;
-        font-size: 15px;
-      }
-      .detail-item strong {
-        color: #555555;
-      }
-      .original-email-preview {
-        background-color: #f0f0f0;
-        border-radius: 6px;
-        padding: 20px;
-        margin-top: 20px;
-        font-size: 14px;
-        line-height: 1.5;
-        overflow-x: auto; /* For wide content */
-      }
-      .original-email-preview h3 {
-        margin-top: 0;
-        color: #0056b3;
-        font-size: 16px;
-        margin-bottom: 15px;
-      }
-      .original-email-preview pre {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        margin: 0;
-      }
-      .footer {
-        background-color: #eeeeee;
-        padding: 20px 30px;
-        text-align: center;
-        font-size: 12px;
-        color: #777777;
-        border-bottom-left-radius: 8px;
-        border-bottom-right-radius: 8px;
-      }
-      .footer a {
-        color: #0056b3;
-        text-decoration: none;
-      }
-    </style>
   </head>
-  <body>
-    <div class="email-wrapper">
-      <div class="header">
-        <h1 style="color: #ffffff !important">Email Campaign Analytics</h1>
-        <p style="color: #ecff1a !important">G-Realm Studio Report</p>
-      </div>
-
-      <div class="content-section">
-        <div class="section-title">Campaign Summary</div>
-        <div class="stats-grid">
-          <div class="stat-item">
-            <div class="stat-value"><%= totalEmails %></div>
-            <div class="stat-label">Total Attempted</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value success"><%= successfulEmails %></div>
-            <div class="stat-label">Successfully Sent</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-value failed"><%= failedEmails %></div>
-            <div class="stat-label">Failed to Send</div>
-          </div>
-        </div>
-
-        <div class="section-title">Campaign Details</div>
-        <div class="detail-item"><strong>Subject:</strong> <%= subject %></div>
-        <div class="detail-item">
-          <strong>Email Type:</strong> <%= emailType %>
-        </div>
-
-        <div class="section-title">Successfully Sent To</div>
-        <table style="width: 100%; border-collapse: collapse;">
-          <thead>
-            <tr>
-              <th style="border-bottom: 1px solid #eeeeee; padding: 8px; text-align: left;">#</th>
-              <th style="border-bottom: 1px solid #eeeeee; padding: 8px; text-align: left;">School Name</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% successfulSchoolNames.forEach((school, index) => { %>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background: #f8f8f8;
+      width: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #222;
+    ">
+    <center style="width: 100%; background: #f8f8f8">
+      <table
+        role="presentation"
+        width="100%"
+        cellpadding="0"
+        cellspacing="0"
+        border="0"
+        style="background: #f8f8f8">
+        <tr>
+          <td align="center">
+            <table
+              role="presentation"
+              width="600"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              style="
+                max-width: 600px;
+                width: 100%;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                margin: 24px 0;
+              ">
               <tr>
-                <td style="border-bottom: 1px solid #eeeeee; padding: 8px;"><%= index + 1 %></td>
-                <td style="border-bottom: 1px solid #eeeeee; padding: 8px;"><%= school %></td>
+                <td
+                  style="
+                    background: #00b33c;
+                    color: #fff;
+                    text-align: center;
+                    padding: 24px 20px 12px 20px;
+                    border-top-left-radius: 12px;
+                    border-top-right-radius: 12px;
+                  ">
+                  <h1
+                    style="
+                      margin: 0;
+                      font-size: 24px;
+                      font-family: 'Playfair Display', Georgia, serif;
+                      color: #fff;
+                    ">
+                    Email Campaign Analytics
+                  </h1>
+                  <p style="margin: 6px 0 0 0; font-size: 14px; color: #ecff1a">
+                    G-Realm Studio Report
+                  </p>
+                </td>
               </tr>
-            <% }); %>
-          </tbody>
-        </table>
-
-        <div class="section-title">Original Email Content</div>
-        <div class="original-email-preview">
-          <% if (emailType === 'html') { %>
-          <h3>HTML Content:</h3>
-          <div
-            style="
-              background-color: #ffffff;
-              padding: 15px;
-              border-radius: 4px;
-              border: 1px solid #e0e0e0;
-            ">
-            <%- originalMessage %>
-          </div>
-          <% } else { %>
-          <h3>Plain Text Content:</h3>
-          <pre><%= originalMessage %></pre>
-          <% } %>
-        </div>
-      </div>
-
-      <div class="footer">
-        &copy; <%= new Date().getFullYear() %> G-Realm Studio. All rights
-        reserved.<br />
-        Report generated by G-Realm Studio Email Sender.
-      </div>
-    </div>
+              <tr>
+                <td style="padding: 28px 24px 0 24px">
+                  <table
+                    width="100%"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0">
+                    <tr>
+                      <td
+                        colspan="3"
+                        style="
+                          font-size: 18px;
+                          font-weight: bold;
+                          color: #0056b3;
+                          border-bottom: 1px solid #eeeeee;
+                          padding-bottom: 10px;
+                        ">
+                        Campaign Summary
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        align="center"
+                        style="
+                          padding: 18px 8px;
+                          border-right: 1px solid #f0f0f0;
+                        ">
+                        <div
+                          style="
+                            font-size: 28px;
+                            font-weight: bold;
+                            color: #007bff;
+                          ">
+                          <%= totalEmails %>
+                        </div>
+                        <div
+                          style="
+                            font-size: 13px;
+                            color: #666;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                          ">
+                          Total Attempted
+                        </div>
+                      </td>
+                      <td
+                        align="center"
+                        style="
+                          padding: 18px 8px;
+                          border-right: 1px solid #f0f0f0;
+                        ">
+                        <div
+                          style="
+                            font-size: 28px;
+                            font-weight: bold;
+                            color: #28a745;
+                          ">
+                          <%= successfulEmails %>
+                        </div>
+                        <div
+                          style="
+                            font-size: 13px;
+                            color: #666;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                          ">
+                          Successfully Sent
+                        </div>
+                      </td>
+                      <td align="center" style="padding: 18px 8px">
+                        <div
+                          style="
+                            font-size: 28px;
+                            font-weight: bold;
+                            color: #dc3545;
+                          ">
+                          <%= failedEmails %>
+                        </div>
+                        <div
+                          style="
+                            font-size: 13px;
+                            color: #666;
+                            text-transform: uppercase;
+                            letter-spacing: 0.5px;
+                          ">
+                          Failed to Send
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                  <table
+                    width="100%"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    style="margin-top: 24px">
+                    <tr>
+                      <td
+                        colspan="2"
+                        style="
+                          font-size: 18px;
+                          font-weight: bold;
+                          color: #0056b3;
+                          border-bottom: 1px solid #eeeeee;
+                          padding-bottom: 10px;
+                        ">
+                        Campaign Details
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px 0; font-size: 15px">
+                        <strong style="color: #555">Subject:</strong>
+                      </td>
+                      <td style="padding: 10px 0; font-size: 15px">
+                        <%= subject %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px 0; font-size: 15px">
+                        <strong style="color: #555">Email Type:</strong>
+                      </td>
+                      <td style="padding: 10px 0; font-size: 15px">
+                        <%= emailType %>
+                      </td>
+                    </tr>
+                  </table>
+                  <table
+                    width="100%"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    style="margin-top: 24px">
+                    <tr>
+                      <td
+                        colspan="3"
+                        style="
+                          font-size: 18px;
+                          font-weight: bold;
+                          color: #0056b3;
+                          border-bottom: 1px solid #eeeeee;
+                          padding-bottom: 10px;
+                        ">
+                        Successfully Sent To
+                      </td>
+                    </tr>
+                    <tr>
+                      <th
+                        align="left"
+                        style="
+                          border-bottom: 1px solid #eeeeee;
+                          padding: 8px;
+                          font-size: 14px;
+                        ">
+                        #
+                      </th>
+                      <th
+                        align="left"
+                        style="
+                          border-bottom: 1px solid #eeeeee;
+                          padding: 8px;
+                          font-size: 14px;
+                        ">
+                        School Name
+                      </th>
+                      <th
+                        align="left"
+                        style="
+                          border-bottom: 1px solid #eeeeee;
+                          padding: 8px;
+                          font-size: 14px;
+                        ">
+                        Email
+                      </th>
+                    </tr>
+                    <% successfulRecipients.forEach((recipient, index) => { %>
+                    <tr>
+                      <td
+                        style="
+                          border-bottom: 1px solid #eeeeee;
+                          padding: 8px;
+                          font-size: 14px;
+                        ">
+                        <%= index + 1 %>
+                      </td>
+                      <td
+                        style="
+                          border-bottom: 1px solid #eeeeee;
+                          padding: 8px;
+                          font-size: 14px;
+                        ">
+                        <%= recipient.schoolname %>
+                      </td>
+                      <td
+                        style="
+                          border-bottom: 1px solid #eeeeee;
+                          padding: 8px;
+                          font-size: 14px;
+                        ">
+                        <%= recipient.email %>
+                      </td>
+                    </tr>
+                    <% }); %>
+                  </table>
+                  <div style="margin: 24px 0 0 0; text-align: center">
+                    <a
+                      href="/download-csv"
+                      style="
+                        display: inline-block;
+                        padding: 10px 20px;
+                        background-color: #007bff;
+                        color: #fff;
+                        text-decoration: none;
+                        border-radius: 5px;
+                        font-weight: bold;
+                        font-size: 15px;
+                      "
+                      >Download CSV</a
+                    >
+                  </div>
+                  <table
+                    width="100%"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    style="margin-top: 24px">
+                    <tr>
+                      <td
+                        style="
+                          font-size: 18px;
+                          font-weight: bold;
+                          color: #0056b3;
+                          border-bottom: 1px solid #eeeeee;
+                          padding-bottom: 10px;
+                        ">
+                        Original Email Content
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 16px 0 0 0">
+                        <% if (emailType === 'html') { %>
+                        <div
+                          style="
+                            background: #fff;
+                            padding: 15px;
+                            border-radius: 4px;
+                            border: 1px solid #e0e0e0;
+                            font-size: 14px;
+                            line-height: 1.5;
+                            overflow-x: auto;
+                          ">
+                          <%- originalMessage %>
+                        </div>
+                        <% } else { %>
+                        <pre
+                          style="
+                            background: #f0f0f0;
+                            border-radius: 4px;
+                            border: 1px solid #e0e0e0;
+                            padding: 15px;
+                            font-size: 14px;
+                            line-height: 1.5;
+                            margin: 0;
+                            overflow-x: auto;
+                          ">
+<%= originalMessage %></pre
+                        >
+                        <% } %>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td
+                  style="
+                    background: #eeeeee;
+                    padding: 20px 30px;
+                    text-align: center;
+                    font-size: 12px;
+                    color: #777;
+                    border-bottom-left-radius: 12px;
+                    border-bottom-right-radius: 12px;
+                  ">
+                  &copy; <%= new Date().getFullYear() %> G-Realm Studio. All
+                  rights reserved.<br />
+                  Report generated by G-Realm Studio Email Sender.
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </center>
   </body>
 </html>

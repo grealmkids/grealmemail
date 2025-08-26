@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const path = require('path'); // Added
 const ejs = require('ejs'); // Added
+const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 const upload = multer({ dest: 'uploads/' });
 
@@ -54,7 +55,7 @@ function getAnalyticsEmails() {
 }
 
 // Function to send analytics report email
-async function sendAnalyticsReport(stats, originalMessage, emailType, subject, successfulSchoolNames) {
+async function sendAnalyticsReport(stats, originalMessage, emailType, subject, successfulRecipients) {
   const analyticsEmails = getAnalyticsEmails();
 
   if (analyticsEmails.length === 0) {
@@ -83,7 +84,7 @@ async function sendAnalyticsReport(stats, originalMessage, emailType, subject, s
     subject: subject,
     emailType: emailType,
     originalMessage: originalMessage,
-    successfulSchoolNames: successfulSchoolNames
+    successfulRecipients: successfulRecipients
   });
 
   const mailOptions = {
@@ -126,7 +127,7 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
       let successfulEmails = 0;
       let failedEmails = 0;
       const totalEmails = results.length;
-      const successfulSchoolNames = [];
+      const successfulRecipients = [];
 
       const promises = results.map(row => {
         const mailOptions = {
@@ -146,7 +147,7 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
         return transporter.sendMail(mailOptions)
           .then(() => {
             successfulEmails++;
-            successfulSchoolNames.push(row.schoolname);
+            successfulRecipients.push({ schoolname: row.schoolname, email: row.email });
           })
           .catch(error => {
             console.error(`Failed to send email to ${row.email}:`, error);
@@ -156,12 +157,23 @@ router.post('/send', isAuthenticated, upload.single('csvfile'), (req, res) => {
 
       await Promise.all(promises);
 
+      // Write successful recipients to CSV
+      const csvWriter = createCsvWriter({
+        path: path.join(__dirname, '../uploads/last_report.csv'),
+        header: [
+          { id: 'schoolname', title: 'School Name' },
+          { id: 'email', title: 'Email' },
+        ],
+      });
+
+      await csvWriter.writeRecords(successfulRecipients);
+
       // Send analytics report
       await sendAnalyticsReport({
         total: totalEmails,
         successful: successfulEmails,
         failed: failedEmails
-      }, message, emailType, subject, successfulSchoolNames);
+      }, message, emailType, subject, successfulRecipients);
 
       fs.unlinkSync(req.file.path);
       res.redirect('/dashboard?status=success');
@@ -175,6 +187,16 @@ router.get('/logout', (req, res) => {
     }
     res.clearCookie('connect.sid');
     res.redirect('/');
+  });
+});
+
+router.get('/download-csv', (req, res) => {
+  const filePath = path.join(__dirname, '../uploads/last_report.csv');
+  res.download(filePath, 'campaign_report.csv', (err) => {
+    if (err) {
+      console.error('Error downloading file:', err);
+      res.status(500).send('Could not download the file.');
+    }
   });
 });
 
